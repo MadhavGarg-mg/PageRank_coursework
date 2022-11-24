@@ -15,44 +15,33 @@ def load_graph(args):
     A dict mapling a URL (str) to a list of target URLs (str).
     """
     node_list = []
-    used_node_list = []
     target_list = []
-    dict1 = {}
+    dictionary_nodes_target = {}
     # Iterate through the file line by line
     for line in args.datafile:
         # And split each line into two URLs
         node, target = line.split()
-        if node in node_list:
-            pass
+        node_list.append(node)
+        if node == node_list[0]:
+            target_list.append(target)
+            dictionary_nodes_target[node_list[0]] = target_list
+            if len(node_list) > 1:
+                del node_list[1]
         else:
-            node_list.append(node)
-    # print(node_list)
-
-        for i in range(len(node_list)):
-            if node_list[i] in used_node_list:
-                pass
-            else:
-                target_list.append(target)
-                dict1 = {node :[target_list]}
-
-    # print(target_list)
-    # print(node_list)
-    print(dict1)
-
-
-
-            #     for i in range(len(target_list)):
-            #         dict1 = {node: target_list}
-            # print(dict1)
-            # if node in dict1.keys():
-            #     if target not in target_list:
-            #         target_list.append(target)
-            #         print(target_list)
+            target_list = [target]
+            del node_list[0]
+            dictionary_nodes_target[node_list[0]] = target_list
+    return dictionary_nodes_target
 
 
 def print_stats(graph):
     """Print number of nodes and edges in the given graph"""
-    raise RuntimeError("This function is not implemented yet.")
+    num_edges = 0
+    print('Number of nodes:', len(graph.keys()))
+    new_edges = list(graph.values())
+    for i in new_edges:
+        num_edges += len(i)
+    print('Number of edges:', num_edges)
 
 
 def stochastic_page_rank(graph, args):
