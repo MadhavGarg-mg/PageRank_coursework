@@ -1,3 +1,4 @@
+import random
 import sys
 import os
 import time
@@ -58,7 +59,17 @@ def stochastic_page_rank(graph, args):
     a random walk that starts on a random node will after n_steps end
     on each node of the given graph.
     """
-    raise RuntimeError("This function is not implemented yet.")
+    hit_counter = {}
+    nodes = list(graph.keys())
+    for i in nodes:
+        hit_counter[i] = 0
+    num = random.randint(0, len((graph.keys())) - 1)
+    for j in range(args.repeats):
+        current_node = nodes[num]
+        for k in range(args.steps):
+            current_node = random.choice(graph[current_node])
+        hit_counter[current_node] += 1/args.repeats
+    return hit_counter
 
 
 def distribution_page_rank(graph, args):
@@ -91,7 +102,7 @@ if __name__ == '__main__':
     algorithm = distribution_page_rank if args.method == 'distribution' else stochastic_page_rank
 
     graph = load_graph(args)
-    print(graph)
+    # print(graph)
     print_stats(graph)
 
     start = time.time()
