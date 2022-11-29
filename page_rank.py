@@ -96,7 +96,8 @@ def distribution_page_rank(graph, args):
             p = node_prob[node1] / len(graph[node1])
             for target in graph[node1]:
                 next_prob[target] += p
-        node_prob = next_prob
+        for node in nodes:
+            node_prob[node] = next_prob[node]
     return node_prob
 
 
