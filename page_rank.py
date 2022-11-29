@@ -59,13 +59,13 @@ def stochastic_page_rank(graph, args):
     a random walk that starts on a random node will after n_steps end
     on each node of the given graph.
     """
-    hit_counter = {}
     nodes = list(graph.keys())
-    for i in nodes:
-        hit_counter[i] = 0
-    for j in range(args.repeats):
+    hit_counter = {node: 0 for node in nodes}
+    for repeates in range(args.repeats):
+        # num = random.randint(0, len(graph.keys()) - 1)
+        # current_node = graph[current_node][num]
         current_node = random.choice(nodes)
-        for k in range(args.steps):
+        for steps in range(args.steps):
             current_node = random.choice(graph[current_node])
         hit_counter[current_node] += 1/args.repeats
     return hit_counter
@@ -84,11 +84,9 @@ def distribution_page_rank(graph, args):
     This function estimates the Page Rank by iteratively calculating
     the probability that a random walker is currently on any node.
     """
-    node_prob = {}
     nodes = list(graph.keys())
     next_prob = {}
-    for node in nodes:
-        node_prob[node] = 1 / len(nodes)
+    node_prob = {node: 1 / len(nodes) for node in nodes}
     for steps in range(args.steps):
         for i in nodes:
             next_prob[i] = 0
@@ -115,7 +113,7 @@ if __name__ == '__main__':
     algorithm = distribution_page_rank if args.method == 'distribution' else stochastic_page_rank
 
     graph = load_graph(args)
-    # print(graph)
+    print(graph)
     print_stats(graph)
 
     start = time.time()
