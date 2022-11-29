@@ -38,10 +38,10 @@ def load_graph(args):
 def print_stats(graph):
     """Print number of nodes and edges in the given graph"""
     num_edges = 0
-    print('Number of nodes:', len(graph.keys()))
-    new_edges = list(graph.values())
-    for i in new_edges:
-        num_edges += len(i)
+    print('Number of nodes:', len(graph.keys()))  # Using graph.keys() we can get all the nodes from the datafile
+    new_edges = graph.values()  # Putting lists of all the values of graph.values() in a list
+    for edge in new_edges:  # Going through each list
+        num_edges += len(edge)  # Adding the length of each list and putting it into num_edges
     print('Number of edges:', num_edges)
 
 
@@ -61,6 +61,9 @@ def stochastic_page_rank(graph, args):
     """
     nodes = list(graph.keys())
     hit_counter = {node: 0 for node in nodes}
+    # hit_counter = {}
+    # for i in nodes:
+    #     hit_counter[i] = 0
     for repeates in range(args.repeats):
         # num = random.randint(0, len(graph.keys()) - 1)
         # current_node = graph[current_node][num]
