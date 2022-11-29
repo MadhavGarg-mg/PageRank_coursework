@@ -63,9 +63,8 @@ def stochastic_page_rank(graph, args):
     nodes = list(graph.keys())
     for i in nodes:
         hit_counter[i] = 0
-    num = random.randint(0, len((graph.keys())) - 1)
     for j in range(args.repeats):
-        current_node = nodes[num]
+        current_node = random.choice(nodes)
         for k in range(args.steps):
             current_node = random.choice(graph[current_node])
         hit_counter[current_node] += 1/args.repeats
@@ -85,7 +84,20 @@ def distribution_page_rank(graph, args):
     This function estimates the Page Rank by iteratively calculating
     the probability that a random walker is currently on any node.
     """
-    raise RuntimeError("This function is not implemented yet.")
+    node_prob = {}
+    nodes = list(graph.keys())
+    next_prob = {}
+    for node in nodes:
+        node_prob[node] = 1 / len(nodes)
+    for steps in range(args.steps):
+        for i in nodes:
+            next_prob[i] = 0
+        for node1 in nodes:
+            p = node_prob[node1] / len(graph[node1])
+            for target in graph[node1]:
+                next_prob[target] += p
+        node_prob = next_prob
+    return node_prob
 
 
 parser = argparse.ArgumentParser(description="Estimates page ranks from link information")
