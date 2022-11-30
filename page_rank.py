@@ -22,16 +22,18 @@ def load_graph(args):
     for line in args.datafile:
         # And split each line into two URLs
         node, target = line.split()
-        node_list.append(node)
-        if node == node_list[0]:
-            target_list.append(target)
+        node_list.append(node)  # This will put the current nodes in the node_list
+        if node == node_list[0]:  # This condition will check if the current node is the first node in the node_list
+            target_list.append(target)  # This will put all the targets for the current node in the target_list
+            # This is making the value of the node in the dictionary to be its target_list
             dictionary_nodes_target[node_list[0]] = target_list
+            # If the node_list has more than 1 node in it then we will delete the node at the 1st index
             if len(node_list) > 1:
                 del node_list[1]
         else:
+            # This will reset the target list if the node is not the same as the 0th index in the node_list
             target_list = [target]
             del node_list[0]
-            dictionary_nodes_target[node_list[0]] = target_list
     return dictionary_nodes_target
 
 
@@ -59,18 +61,14 @@ def stochastic_page_rank(graph, args):
     a random walk that starts on a random node will after n_steps end
     on each node of the given graph.
     """
-    nodes = list(graph.keys())
-    hit_counter = {node: 0 for node in nodes}
-    # hit_counter = {}
-    # for i in nodes:
-    #     hit_counter[i] = 0
-    for repeates in range(args.repeats):
-        # num = random.randint(0, len(graph.keys()) - 1)
-        # current_node = graph[current_node][num]
-        current_node = random.choice(nodes)
+    nodes = list(graph.keys())  # Putting all the nodes in a list
+    hit_counter = {node: 0 for node in nodes}  # Initializing the hit_counter to be 0 for every node
+    for repeats in range(args.repeats):
+        current_node = random.choice(nodes)  # Choosing a random node for each repeat
         for steps in range(args.steps):
-            current_node = random.choice(graph[current_node])
-        hit_counter[current_node] += 1/args.repeats
+            current_node = random.choice(graph[current_node])  # Choosing a random target for each step from the node
+        # Adding to the hit_counter for the current_node after all the steps
+        hit_counter[current_node] += 1 / args.repeats
     return hit_counter
 
 
@@ -87,18 +85,20 @@ def distribution_page_rank(graph, args):
     This function estimates the Page Rank by iteratively calculating
     the probability that a random walker is currently on any node.
     """
-    nodes = list(graph.keys())
     next_prob = {}
-    node_prob = {node: 1 / len(nodes) for node in nodes}
-    for steps in range(args.steps):
-        for i in nodes:
+    # Initializing the node_prob to be 1 / (number of nodes) for all nodes
+    node_prob = {node: 1 / len(list(graph.keys())) for node in list(graph.keys())}
+    for step in range(args.steps):
+        # Initializing the next_prob to be 0 for all nodes
+        for i in list(graph.keys()):
             next_prob[i] = 0
-        for node1 in nodes:
+        for node1 in list(graph.keys()):
+            # Putting node_prob for all nodes and dividing with their out degree
             p = node_prob[node1] / len(graph[node1])
             for target in graph[node1]:
-                next_prob[target] += p
-        for node in nodes:
-            node_prob[node] = next_prob[node]
+                next_prob[target] += p  # Adding the probability to the next_prob for all targets
+        for node in list(graph.keys()):
+            node_prob[node] = next_prob[node]  # Replacing the node_prob for each node as the nex_prob for that element
     return node_prob
 
 
@@ -126,5 +126,5 @@ if __name__ == '__main__':
 
     top = sorted(ranking.items(), key=lambda item: item[1], reverse=True)
     sys.stderr.write(f"Top {args.number} pages:\n")
-    print('\n'.join(f'{100*v:.2f}\t{k}' for k,v in top[:args.number]))
+    print('\n'.join(f'{100 * v:.2f}\t{k}' for k, v in top[:args.number]))
     sys.stderr.write(f"Calculation took {time:.2f} seconds.\n")
