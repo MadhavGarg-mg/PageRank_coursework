@@ -116,7 +116,7 @@ if __name__ == '__main__':
     algorithm = distribution_page_rank if args.method == 'distribution' else stochastic_page_rank
 
     graph = load_graph(args)
-    print(graph)
+
     print_stats(graph)
 
     start = time.time()
