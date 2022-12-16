@@ -8,11 +8,10 @@ dictionary comprehensions and random.choice() decrease the execution time of my 
 Initially, I was using random.randint() to give me a random number, so I could use that number in node 
 indexing to give me a new target_node, but as I had to loop 100 million times, it took a lot of
 time doing that. Instead, I choose to use random.choice() directly which lead to me cutting half 
-my execution time by removing a redundant step getting repeated 100 million times. Using just this 
-step I cut almost 45 seconds of execution time. Another way that I used to cut time was by using 
-dictionary comprehensions for hit_counter which further cut some extra execution time. Just by using these
-two methods, I was able to cut my time from 90 seconds to 43 seconds. The code also looks more
-concise and clean after optimization.
+my execution time by removing a redundant step getting repeated 100 million times. Also, by using
+from random import choice I cut 50 seconds of execution time. Another way that I used to cut time 
+was by using dictionary comprehensions for hit_counter which further cut some extra execution time.
+Just by using these two methods, I was able to cut my time from 90 seconds to 40 seconds.
 
 ```python
 """Initial code -> 90 seconds."""
@@ -35,15 +34,15 @@ def stochastic_page_rank(graph, args):
 
 ```python
 """Optimized code -> 43 seconds."""
-import random
+from random import choice
 
 def stochastic_page_rank(graph, args):
     nodes = list(graph.keys())
     hit_counter = {node: 0 for node in nodes}
     for repeats in range(args.repeats):  # This loop took 40 seconds
-        current_node = random.choice(nodes) 
+        current_node = choice(nodes) 
         for steps in range(args.steps):  
-            current_node = random.choice(graph[current_node])
+            current_node = choice(graph[current_node])
         hit_counter[current_node] += 1 / args.repeats
     return hit_counter
 ```

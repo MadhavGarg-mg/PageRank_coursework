@@ -1,4 +1,4 @@
-import random
+from random import choice
 import sys
 import os
 import time
@@ -64,9 +64,9 @@ def stochastic_page_rank(graph, args):
     nodes = list(graph.keys())  # Putting all the nodes in a list
     hit_counter = {node: 0 for node in nodes}  # Initializing the hit_counter to be 0 for every node
     for repeats in range(args.repeats):
-        current_node = random.choice(nodes)  # Choosing a random node for each repeat
+        current_node = choice(nodes)  # Choosing a random node for each repeat
         for steps in range(args.steps):
-            current_node = random.choice(graph[current_node])  # Choosing a random target for each step from the node
+            current_node = choice(graph[current_node])  # Choosing a random target for each step from the node
         # Adding to the hit_counter for the current_node after all the steps
         hit_counter[current_node] += 1 / args.repeats
     return hit_counter
